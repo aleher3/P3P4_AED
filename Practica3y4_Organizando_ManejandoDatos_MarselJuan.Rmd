@@ -287,7 +287,6 @@ tb.tidy <- raw %>%
 head(tb.tidy)
 
 
-
 ```
 
 
@@ -309,6 +308,30 @@ Para obtener la versión _tidy_ primero juntamos todos los días en una variable
 Obtén la versión _tidy_ del conjunto de datos `weather` utilizando las funciones `pivot_longer` y `pivot_wider`. Además cambiaremos las columnas `year`, `month` y `dia` por una única variable `fecha`. Para que la operación `pivot_wider` no de error tendremos que eliminar los NA's cuando usemos `pivot_longer`.
 
 ```{r}
+
+load("data/weather.Rdata")
+head(raw[, 1:20])
+
+weather.tidy <- raw %>%
+  pivot_longer(
+    cols = d1:d31,
+    names_to = "dia",
+    values_to = "temperatura",
+    names_prefix = "d",
+    values_drop_na = TRUE
+  ) %>%
+  pivot_wider(
+    names_from = element,
+    values_from = temperatura
+  ) %>%
+  mutate(
+    fecha = as.Date(
+      paste(year, month, dia, sep = "-")
+    )
+  ) %>%
+  select(id, fecha, tmax, tmin)
+
+head(weather.tidy)
 
 
 ```
@@ -357,7 +380,21 @@ Muestra las primeras muestras de ambos data frames para hacerte una idea de las 
 
 ```{r }
 
+
+load("data/VuelosNY.Rdata")
+
+head(flights)
+
+head(planes)
+
 ```
+La diferencia entre los datasets esque flights contiene información relativa a los vuelos realizados,como la fecha, los aeruertos de origen...
+
+Por otro lado el data frame planes contiene información sobre las características de los aviones, como el fabricante, el modelo...
+
+Ambos datasets  comparten la variable tailnum
+
+
 
 ### Ejercicio 6
 
