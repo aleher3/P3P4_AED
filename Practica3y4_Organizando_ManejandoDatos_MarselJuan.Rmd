@@ -380,7 +380,6 @@ Muestra las primeras muestras de ambos data frames para hacerte una idea de las 
 
 ```{r }
 
-
 load("data/VuelosNY.Rdata")
 
 head(flights)
@@ -403,7 +402,30 @@ En nuestro estudio queremos aplicar una serie de criterios de exclusión sobre l
 * Nota: Revisar el uso de la función filter vista en clase y tener en cuenta los operadores de comparación: igual ==, distinto !=, mayor >, mayor o igual >=, menor <, menor o igual <=.
 
 ```{r }
+sort(unique(planes$manufacturer))
+#filtrar los aviones
+library(dplyr)
 
+planes.f <- planes %>%
+  filter(
+    is.na(manufacturer) | !grepl("MCDONNELL DOUGLAS", manufacturer, ignore.case = TRUE),
+    !is.na(seats),
+    seats >= 90,
+    seats <= 210
+  )
+
+planes.f <- planes.f %>%
+  mutate(
+    manufacturer = ifelse(
+      grepl("AIRBUS", manufacturer, ignore.case = TRUE),
+      "AIRBUS COMP",
+      manufacturer
+    )
+  )
+
+head(planes.f)
+nrow(planes.f)
+sort(unique(planes.f$manufacturer))
 
 
 ```
@@ -415,6 +437,8 @@ Crea un data frame denominado `flights.f` que contenga los vuelos que involucren
 
 ```{r }
 
+flights.f <- flights %>%
+  inner_join(planes.f, by = "tailnum")
 
 ```
 
