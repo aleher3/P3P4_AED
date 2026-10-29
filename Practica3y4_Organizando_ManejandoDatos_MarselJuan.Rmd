@@ -246,8 +246,6 @@ load("data/billboard.Rdata")
 head(raw[, 1:12])
 
 
-library(tidyr)
-
 billboard.tidy <- raw %>%
   pivot_longer(
     cols = wk1:wk76,
@@ -280,6 +278,15 @@ Para pasar a formato _tidy_ necesitamos realizar dos operaciones en este caso. E
 Convierte el conjunto de datos TB en _tidy_ utilizando `gather` y `separate`.
 
 ```{r}
+load("data/tb.Rdata")
+
+tb.tidy <- raw %>%
+  gather(key = "grupo", value = "casos", -country, -year) %>%
+  separate(col = grupo, into = c("sexo", "edad"), sep = 1)
+
+head(tb.tidy)
+
+
 
 ```
 
