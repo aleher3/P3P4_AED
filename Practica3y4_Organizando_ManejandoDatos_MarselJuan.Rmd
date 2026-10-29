@@ -404,7 +404,7 @@ En nuestro estudio queremos aplicar una serie de criterios de exclusión sobre l
 ```{r }
 sort(unique(planes$manufacturer))
 #filtrar los aviones
-library(dplyr)
+
 
 planes.f <- planes %>%
   filter(
@@ -437,8 +437,7 @@ Crea un data frame denominado `flights.f` que contenga los vuelos que involucren
 
 ```{r }
 
-flights.f <- flights %>%
-  inner_join(planes.f, by = "tailnum")
+flights.f <- flights %>%inner_join(planes.f, by = "tailnum")
 
 ```
 
@@ -447,6 +446,9 @@ flights.f <- flights %>%
 Reasigna los nombres de los data frames `planes.f` y `flights.f` a los nombres originales  `planes` y `flights`.
 
 ```{r }
+
+flights <- flights.f
+planes <- planes.f
 
 ```
 
@@ -460,6 +462,18 @@ Existen variables que, a priori, no tienen demasiado interés para el estudio qu
 
 ```{r }
 
+#primero nos quedamos con todas las columnas excepto time_hour y las palabras que terminan con la palabra "time".
+
+
+flights <- flights %>%
+  select(-time_hour, -ends_with("time"))
+
+#nos quedamos con todas las variables excepto speed y type.
+
+plane <- planes %>% 
+  select(-speed,-type)
+
+
 ```
 
 ### Ejercicio 10
@@ -467,6 +481,12 @@ Existen variables que, a priori, no tienen demasiado interés para el estudio qu
 Incorpora una nueva variable a `flights` denominado `Full_Date` que sea de tipo `character` que incorpore una cadena de texto de la forma `d-m-Y`. Donde `d` indica día, `m` mes e `Y` año, a partir de la información incluida en el data frame. Utiliza una función de **DPLYR** que permita conseguir este propósito. Elimina las variables originales involucradas en la creación de la nueva variable.
 
 ```{r }
+#al usar inner_join se me crea una variables year.x y otra year.y asique debo eliminar las dos y usar una de ellas para la fecha
+
+flights %>% mutate(Full_Date= paste(day, month,year.x, sep ='-')) %>%
+  select(-day, -month, -year.x, -year.y)
+
+
 
 
 ```
